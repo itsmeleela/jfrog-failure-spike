@@ -1,0 +1,21 @@
+name: spike
+on: workflow_dispatch
+permissions:
+  actions: read
+  checks: read
+  contents: read
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./probe
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Deliberate failure
+        run: |
+          echo "::error title=Boom::something broke in the build"
+          echo "real stderr text" >&2
+          exit 3
+      - name: Skipped step
+        run: echo never
